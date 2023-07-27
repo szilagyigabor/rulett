@@ -74,6 +74,12 @@ fn main() -> std::io::Result<()> {
 	
 	let mut printable;
 	let mut num;
+	
+	// print initial 0 sum
+	printable = sum.to_string();
+	file.write_all(printable.as_bytes());
+	file.write_all(b"\n");
+	
 	// generate
 	if bet_type != BetType::All {
 		for round in 0..rounds {
@@ -86,7 +92,7 @@ fn main() -> std::io::Result<()> {
 		println!("{}", bet_type.to_string());
 	}
 	else {
-		// generate values for all bet types
+/* 		// generate values for all bet types
 		const bet_types: [BetType; 10] = [BetType::StraightUp, BetType::Split, BetType::Street, BetType::Corner, BetType::Line, BetType::Column, BetType::Dozen, BetType::Color, BetType::EvenOdd, BetType::LowHigh]; // leaving out "All"
 		let mut sums = [0i64; 10];
 		
@@ -104,7 +110,7 @@ fn main() -> std::io::Result<()> {
 				sums[tn] += bet(amount, bet_types[tn], num);
 			}
 			// print row of sums into output file
-		}
+		} */
 	}
 	Ok(())
 }
