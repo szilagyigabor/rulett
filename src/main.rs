@@ -65,6 +65,7 @@ fn main() -> std::io::Result<()> {
 	
 	// read arguments
 	let rounds = args.rounds;
+	let print_interval = std::cmp::max(1,args.rounds/1000);
 	let amount = 1;
 	let bet_type = args.bet_type;
 	
@@ -73,11 +74,13 @@ fn main() -> std::io::Result<()> {
 	let mut file = LineWriter::new(file);
 	
 	let mut printable;
+	let mut round_str;
 	let mut num;
 	
 	// print initial 0 sum
-	printable = sum.to_string();
-	file.write_all(printable.as_bytes());
+	file.write_all(b"0");
+	file.write_all(b"\t");
+	file.write_all(b"0");
 	file.write_all(b"\n");
 	
 	// generate
@@ -85,9 +88,14 @@ fn main() -> std::io::Result<()> {
 		for round in 0..rounds {
 			num = range.sample(&mut rng);
 			sum += bet(amount, &bet_type, num);
-			printable = sum.to_string();
-			file.write_all(printable.as_bytes());
-			file.write_all(b"\n");
+			if round%print_interval == 0 {
+				printable = sum.to_string();
+				round_str = round.to_string();
+				file.write_all(round_str.as_bytes());
+				file.write_all(b"\t");
+				file.write_all(printable.as_bytes());
+				file.write_all(b"\n");
+			}
 		}
 		println!("{}", bet_type.to_string());
 	}
