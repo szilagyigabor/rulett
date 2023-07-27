@@ -2,9 +2,11 @@ use rand::distributions::{Distribution, Uniform};
 //use std::env;
 use clap::{Parser, ArgEnum};
 use std::fs::File;
-use std::io::Write;
+use std::io::LineWriter;
+use std::io::prelude::*;
+use strum_macros;
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, ArgEnum)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, ArgEnum, strum_macros::Display)]
 pub enum BetType {
 	StraightUp,
 	Split,
@@ -16,9 +18,10 @@ pub enum BetType {
 	Color,
 	EvenOdd,
 	LowHigh,
+	All,
 }
 
-pub fn bet(amount: i64, bet_type: BetType, outcome: i64) -> i64 {
+pub fn bet(amount: i64, bet_type: &BetType, outcome: i64) -> i64 {
 	let multiplier;
 	let max_to_win;
 	match bet_type {
@@ -32,6 +35,7 @@ pub fn bet(amount: i64, bet_type: BetType, outcome: i64) -> i64 {
 		BetType::Color		=> { multiplier = 1;	max_to_win = 17;	}
 		BetType::EvenOdd	=> { multiplier = 1;	max_to_win = 17;	}
 		BetType::LowHigh	=> { multiplier = 1;	max_to_win = 17;	}
+		BetType::All		=> { multiplier = 0;	max_to_win = 0;		}
 	}
 	
 	if outcome > max_to_win {
@@ -45,7 +49,6 @@ pub fn bet(amount: i64, bet_type: BetType, outcome: i64) -> i64 {
 #[derive(Parser, Debug)]
 #[clap(about)]
 struct Args {
-	/// Bet Type (StraightUp, Split, Street, Corner, Line, Column, Dozen, Color, EvenOdd, LowHigh)
 	#[clap(short, value_enum)]
 	pub bet_type: BetType,
 	/// Number of rounds to play
@@ -53,26 +56,55 @@ struct Args {
 	rounds: i64,
 }
 
-fn main() {
-
+fn main() -> std::io::Result<()> {
+	// init things
 	let args = Args::parse();
-	
 	let range = Uniform::from(0..=36);
 	let mut rng = rand::thread_rng();
 	let mut sum = 0;
-
+	
+	// read arguments
 	let rounds = args.rounds;
 	let amount = 1;
 	let bet_type = args.bet_type;
-
-	let path = "penztarca.txt";
-	let mut output = File::create(path);
-
+	
+	let path = bet_type.to_string() + "_" + &rounds.to_string() + ".txt";
+	let file = File::create(path)?;
+	let mut file = LineWriter::new(file);
+	
+	let mut printable;
 	let mut num;
-	for _ in 0..rounds {
-		num = range.sample(&mut rng);
-		sum += bet(amount, bet_type, num);
-		println!("{}", sum);
-		write!(output, "{}", sum);
+	// generate
+	if bet_type != BetType::All {
+		for round in 0..rounds {
+			num = range.sample(&mut rng);
+			sum += bet(amount, &bet_type, num);
+			printable = sum.to_string();
+			file.write_all(printable.as_bytes());
+			file.write_all(b"\n");
+		}
+		println!("{}", bet_type.to_string());
 	}
+	else {
+		// generate values for all bet types
+		const bet_types: [BetType; 10] = [BetType::StraightUp, BetType::Split, BetType::Street, BetType::Corner, BetType::Line, BetType::Column, BetType::Dozen, BetType::Color, BetType::EvenOdd, BetType::LowHigh]; // leaving out "All"
+		let mut sums = [0i64; 10];
+		
+		// print header
+		file.write_all(b"#");
+		for bt in bet_types {
+			file.write_all(printable.as_bytes());
+		}
+		file.write_all(b"\n");
+		
+		let num_types = bet_types.len();
+		for _ in [0..rounds] {
+			for tn in [0..num_types] {
+				num = range.sample(&mut rng);
+				sums[tn] += bet(amount, bet_types[tn], num);
+			}
+			// print row of sums into output file
+		}
+	}
+	Ok(())
 }

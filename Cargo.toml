@@ -7,4 +7,8 @@ edition = "2021"
 
 [dependencies]
 rand = "0.8.5"
+strum_macros = "0.25"
+
+# You can also access strum_macros exports directly through strum using the "derive" feature
+strum = { version = "0.25", features = ["derive"] }
 clap = { version = "3.1", features = ["derive"] }
