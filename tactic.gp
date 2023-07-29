@@ -2,6 +2,7 @@ set terminal pdfcairo size 30cm,15cm
 set xlabel "Kör"
 set ylabel "Pénz egység"
 set key outside vertical top right
+set grid xtics ytics
 
 # magma
 set style line  1 lt 1 lc rgb '#000004' # black
@@ -29,7 +30,7 @@ plot "Color_tactic_1000_a.txt" u 1:2 w l t "A",\
      "Color_tactic_1000_j.txt" u 1:2 w l t "J"
     
 set xtics 0,2000,10000
-set title "Pénz az idő függvényében, Peti taktikája (10000 kör)"
+set title "Pénz az idő függvényében, Peti taktikája (10 000 kör)"
 set output "penz_ido_tactic_10000.pdf"
 plot "Color_tactic_10000_a.txt" u 1:2 w l t "A",\
      "Color_tactic_10000_b.txt" u 1:2 w l t "B",\
@@ -43,7 +44,7 @@ plot "Color_tactic_10000_a.txt" u 1:2 w l t "A",\
      "Color_tactic_10000_j.txt" u 1:2 w l t "J"
     
 set xtics 0,20000,100000
-set title "Pénz az idő függvényében, Peti taktikája (100000 kör)"
+set title "Pénz az idő függvényében, Peti taktikája (100 000 kör)"
 set output "penz_ido_tactic_100000.pdf"
 plot "Color_tactic_100000_a.txt" u 1:2 w l t "A",\
      "Color_tactic_100000_b.txt" u 1:2 w l t "B",\
@@ -57,7 +58,7 @@ plot "Color_tactic_100000_a.txt" u 1:2 w l t "A",\
      "Color_tactic_100000_j.txt" u 1:2 w l t "J"
     
 set xtics 0,200000,1000000
-set title "Pénz az idő függvényében, Peti taktikája (1000000 kör)"
+set title "Pénz az idő függvényében, Peti taktikája (1000 000 kör)"
 set output "penz_ido_tactic_1000000.pdf"
 plot "Color_tactic_1000000_a.txt" u 1:2 w l t "A",\
      "Color_tactic_1000000_b.txt" u 1:2 w l t "B",\
@@ -71,7 +72,7 @@ plot "Color_tactic_1000000_a.txt" u 1:2 w l t "A",\
      "Color_tactic_1000000_j.txt" u 1:2 w l t "J"
     
 set xtics 0,2000000,10000000
-set title "Pénz az idő függvényében, Peti taktikája (10000000 kör)"
+set title "Pénz az idő függvényében, Peti taktikája (10 000 000 kör)"
 set output "penz_ido_tactic_10000000.pdf"
 plot "Color_tactic_10000000_a.txt" u 1:2 w l t "A",\
      "Color_tactic_10000000_b.txt" u 1:2 w l t "B",\
@@ -85,7 +86,7 @@ plot "Color_tactic_10000000_a.txt" u 1:2 w l t "A",\
      "Color_tactic_10000000_j.txt" u 1:2 w l t "J"
     
 set xtics 0,20000000,100000000
-set title "Pénz az idő függvényében, Peti taktikája (100000000 kör)"
+set title "Pénz az idő függvényében, Peti taktikája (100 000 000 kör)"
 set output "penz_ido_tactic_100000000.pdf"
 plot "Color_tactic_100000000_a.txt" u 1:2 w l t "A",\
      "Color_tactic_100000000_b.txt" u 1:2 w l t "B",\
